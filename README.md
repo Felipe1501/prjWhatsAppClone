@@ -1,6 +1,6 @@
 # Projeto WhatsApp Clone
 
-[![Hcode Treinamentos](https://www.hcode.com.br/res/img/hcode-200x100.png)](https://www.hcode.com.br)
+[![Felipe1501](https:Felipe1501.github.io)
 
 Projeto desenvolvido por Felipe1501
 
