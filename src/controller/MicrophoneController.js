@@ -1,5 +1,11 @@
-export class MicrophoneController {
+import { ClassEvent } from "../util/ClassEvent";
+
+export class MicrophoneController extends ClassEvent {
     constructor(){
+
+        //chama o constructor do "pai" dele, que é nesse caso de ClassEvent
+        super();
+
         navigator.mediaDevices.getUserMedia({
             audio: true
         }).then(stream=>{
