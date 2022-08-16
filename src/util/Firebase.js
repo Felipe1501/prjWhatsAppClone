@@ -37,4 +37,23 @@ export class Firebase {
     static hd(){
         return firebase.storage();
     }
+
+    initAuth(){
+        return new Promise((s, f)=>{
+            let provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth().signInWithPopup(provider)
+            .then(result =>{
+                let token  = result.credential.acessToken;
+                let user = result.user;
+
+                s({
+                    user,
+                    token
+                });
+            }).catch(err =>{
+                f(err);
+            });
+        });
+    }
 }
