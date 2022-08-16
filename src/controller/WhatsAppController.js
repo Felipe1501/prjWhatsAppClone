@@ -2,6 +2,7 @@ import {Format} from './../util/Format';
 import {CameraController} from './CameraController';
 import {MicrophoneController} from './MicrophoneController';
 import { DocumentPreviewController } from './DocumentPreviewController';
+import { Firebase } from '../util/Firebase';
 
 export class WhatsAppController{
     constructor(){
@@ -10,6 +11,7 @@ export class WhatsAppController{
         this.elementsPrototype();
         this.loadElements();
         this.initEvents();
+        //this._firebase = new Firebase();
     }
 
     //vai percorrer pelo documento e vai pegar todos os IDs
@@ -223,7 +225,7 @@ export class WhatsAppController{
             this.el.panelMessagesContainer.show();
             this._camera.stop();
         });
-        
+
         this.el.btnAttachDocument.on('click', e=>{
             this.closeAllMainPanel();
             this.el.panelDocumentPreview.addClass('open');
