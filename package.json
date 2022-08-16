@@ -1,7 +1,7 @@
 {
   "name": "prjwhatsappclone",
   "version": "1.0.0",
-  "description": "WhatsAppClone Felipe",
+  "description": "whatsApp felipe",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/Felipe1501/prjWhatsAppClone.git"
   },
-  "author": "Felipe1501",
+  "author": "Felipe",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Felipe1501/prjWhatsAppClone/issues"

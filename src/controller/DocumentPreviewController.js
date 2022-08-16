@@ -52,25 +52,30 @@ export class DocumentPreviewController {
                                     s({
                                         src: canvas.toDataURL('image/png'),
                                         info: `${pdf.numPages} página${_s}`
-                                    });
-                                }).catch(err=>{
-                                    f(err);
+                                    })
+
                                 });
 
-                            }).catch(err=>{
-                                f(err);
                             });
-                        }).catch(err =>{
-                            f(err);
+
+                        }).catch(event => {
+
+                            reject({
+                                error: true,
+                                event
+                            });
+
                         });
-                    }
+
+                    };
 
                     reader.readAsArrayBuffer(this._file);
 
                     break;
 
-                    default:
-                        f(e);
+                default:
+
+                    f();
             }
         });
     }
