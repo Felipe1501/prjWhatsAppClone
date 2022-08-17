@@ -9,7 +9,7 @@ export class WhatsAppController{
     constructor(){
         console.log('WhatsAppController OK');
         
-        //this._firebase = new Firebase();
+        this._firebase = new Firebase();
         this.initAuth();
         this.elementsPrototype();
         this.loadElements();
