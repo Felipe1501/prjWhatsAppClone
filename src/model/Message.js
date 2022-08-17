@@ -1,9 +1,18 @@
 import { Firebase } from "../util/Firebase";
 import { Model } from "./Model";
+import { Format } from "../util/Format";
 
 export class Message extends Model{
     constructor(){
         super();
+    }
+
+    get id(){
+        return this._data.id;
+    }
+
+    set id(value){
+        return this._data.id = value;
     }
 
     get content(){
@@ -11,7 +20,7 @@ export class Message extends Model{
     }
 
     set content(value){
-        return this._data.type;
+        return this._data.content = value;
     }
 
     get type(){
@@ -19,7 +28,7 @@ export class Message extends Model{
     }
 
     set type(value){
-        this._data.type = value;
+      return this._data.type = value;
     }
 
     get timeStamp(){
@@ -288,7 +297,7 @@ export class Message extends Model{
 
             default:
                 div.innerHTML = `
-                <div class="font-style _3DFk6 tail" >
+                <div class="font-style _3DFk6 tail" id="_${this.id}">
                 <span class="tail-container"></span>
                 <span class="tail-container highlight"></span>
                 <div class="Tkt2p">
@@ -297,7 +306,7 @@ export class Message extends Model{
                     </div>
                     <div class="_2f-RV">
                         <div class="_1DZAH">
-                            <span class="message-time">${Format.timeMessage(this.timeStamp)}</span>
+                            <span class="message-time">${Format.timeStampToTime(this.timeStamp)}</span>
                         </div>
                     </div>
                 </div>
