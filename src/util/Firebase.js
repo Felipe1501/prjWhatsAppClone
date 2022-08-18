@@ -9,7 +9,7 @@ export class Firebase {
             authDomain: "prjwhatsappfelipe.firebaseapp.com",
             databaseURL: "https://prjwhatsappfelipe-default-rtdb.firebaseio.com",
             projectId: "prjwhatsappfelipe",
-            storageBucket: "prjwhatsappfelipe.appspot.com",
+            storageBucket: "gs://prjwhatsappfelipe.appspot.com",
             messagingSenderId: "542763002830",
             appId: "1:542763002830:web:7fae2efea92f999289599f",
             measurementId: "G-18Y5LC3K37"
