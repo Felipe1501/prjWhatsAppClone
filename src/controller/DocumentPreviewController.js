@@ -36,7 +36,7 @@ export class DocumentPreviewController {
                         pdfjsLib.getDocument(new Uint8Array(reader.result)).then(pdf => {
                             pdf.getPage(1).then(page =>{
                                 
-                                let viewport = page.getViewPort(1);
+                                let viewport = page.getViewport(1);
 
                                 let canvas = document.createElement('canvas');
                                 let canvasContext = canvas.getContext('2d');
