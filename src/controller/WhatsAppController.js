@@ -24,7 +24,7 @@ export class WhatsAppController{
     }
 
     checkNotifications(){
-        if(typeof Notification === 'function'){
+        if(typeof Notification === 'function' && !this._active){
             if(Notification.permission !== 'granted'){
                 this.el.alertNotificationPemission.show();
             }else{
@@ -42,7 +42,7 @@ export class WhatsAppController{
     }
 
     notification(data){
-        if(Notification.permission === 'granted' && !this._active){
+        if(Notification.permission === 'granted' ){
             let n = new Notification(this._contactActive.name, {
                 icon: this._contactActive.photo,
                 body: data.content
@@ -255,13 +255,13 @@ export class WhatsAppController{
                    }else {
                     
 
-                    let parent = this.el.panelMessagesContainer.querySelector('#', + data.id).parentNode;
+                    let parent = this.el.panelMessagesContainer.querySelector(`#_${data.id}`).parentNode;
 
-                    parent.replaceChild(view, this.el.panelMessagesContainer.querySelector('#_' + data.id));
+                    parent.replaceChild(view, this.el.panelMessagesContainer.querySelector(`#_${data.id}`));
 
                    }
                    
-                   if(this.el.panelMessagesContainer.querySelector('#_' + data.id) && me) {
+                   if(this.el.panelMessagesContainer.querySelector(`#_${data.id}`) && me) {
                    let msgEl = this.el.panelMessagesContainer.querySelector('#_' + data.id);
 
                    msgEl.querySelector('.message-status').innerHTML = message.getStatusViewElement()
