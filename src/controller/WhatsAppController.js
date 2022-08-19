@@ -186,7 +186,7 @@ export class WhatsAppController{
     setActiveChat(contact){
 
         if(this._contactActive){
-            Message.getRef(this._contactActive.chatId).orderBy('timeStamp')
+            Message.getRef(this._contactActive.chatId)
             .onSnapshot(()=>{});
         }
 
@@ -292,7 +292,7 @@ export class WhatsAppController{
                 });
                    }
 
-                });
+
 
                    if (autoScroll){
                     this.el.panelMessagesContainer.scrollTop =
@@ -302,7 +302,7 @@ export class WhatsAppController{
                     this.el.panelMessagesContainer.scrollTop = scrollTop;
                 }  
 
-
+                });
             });
     }
 
@@ -635,7 +635,7 @@ export class WhatsAppController{
             this.closeAllMainPanel();
             this.el.panelDocumentPreview.addClass('open');
             this.el.panelDocumentPreview.css({
-                'height':'calc(100% - 120px);'
+                'height':'100%'
             });
             this.el.inputDocument.click();
         });
@@ -643,9 +643,7 @@ export class WhatsAppController{
         this.el.inputDocument.on('change', e =>{
             if(this.el.inputDocument.files.length) {
 
-                this.el.panelDocumentPreview.css({
-                    'height':'1%'
-                });
+
 
                 let file = this.el.inputDocument.files[0];
 
@@ -663,7 +661,7 @@ export class WhatsAppController{
                 }).catch(err=>{
 
                     this.el.panelDocumentPreview.css({
-                        'height':'calc(100% - 120px);'
+                        'height':'calc(90% - 120px);'
                     });
                     switch (file.type) {
                         case 'application/vnd.ms-excel':
@@ -686,6 +684,7 @@ export class WhatsAppController{
                         break;
                     }
                     this.el.filenamePanelDocumentPreview.innerHTML = file.name;
+                    this.el.infoPanelDocumentPreview.innerHTML = result.info;
                     this.el.imagePanelDocumentPreview.hide();
                     this.el.filePanelDocumentPreview.show();
                 });
@@ -706,14 +705,18 @@ export class WhatsAppController{
 
                 Message.SendDocument(
                     this._contactActive.chatId, 
-                    this._user.email, file, filePreview, this.el.infoPanelDocumentPreview.innerHTML);
+                    this._user.email, file, filePreview, 
+                    this.el.infoPanelDocumentPreview.innerHTML
+                    );
             
                 });
                 } else {
 
                 Message.SendDocument(
                     this._contactActive.chatId, 
-                    this._user.email, file);
+                    this._user.email, 
+                    file
+                    );
 
             }
 
@@ -870,6 +873,7 @@ export class WhatsAppController{
         this.el.panelMessagesContainer.hide();
         this.el.panelDocumentPreview.removeClass('open');
         this.el.panelCamera.removeClass('open');
+        this.el.modalContacts.hide();
     }
 
     closeMenuAttach(e){

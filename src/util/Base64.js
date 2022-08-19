@@ -1,10 +1,6 @@
 export class Base64 {
    static getMimeType(urlBase64){
-    let regex = new /^data:(.+);base64,(.*)$/;
-
-    let result = urlBase64.match(regex);
-
-   return result[1];
+      return base64URL.match(/^data:(.+);base64,(.*)$/)[1];
    }
 
    static toFile(urlBase64){

@@ -42,7 +42,7 @@ export class Chat extends Model{
             }).then(doc =>{
                 Chat.getRef().doc(doc.id).get().then(chat =>{
                     s(chat);
-                })
+                });
             }).catch(err =>{
                 f(err)
             }).catch(err =>{

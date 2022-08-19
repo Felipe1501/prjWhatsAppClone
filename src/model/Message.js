@@ -41,6 +41,14 @@ export class Message extends Model{
         return this._data.timeStamp = value;
     }
 
+    get status() { 
+        return this._data.status; 
+    }
+
+    set status(value) { 
+        return this._data.status = value; 
+    }
+
     get preview(){
         return this._data.timeStamp;
     }
@@ -96,6 +104,7 @@ export class Message extends Model{
     set photo(value){
         return this._data.photo = value;
     }
+
     get duration(){
         return this._data.timeStamp;
     }
@@ -108,10 +117,10 @@ export class Message extends Model{
     getViewElement(me = true){
 
         let div = document.createElement('div');
-
+        div.className = 'message';
         div.id = `_${this.id}`
 
-        div.className = 'message';
+
 
         switch (this.type){
 
@@ -145,7 +154,7 @@ export class Message extends Model{
                         </div>
                         <div class="_3a5-b">
                             <div class="_1DZAH" role="button">
-                                <span class="message-time">${Format.timeStampToTime(this.timeStamp)}</span>
+                                <span class="message-time"></span>
                             </div>
                         </div>
                     </div>
@@ -154,6 +163,7 @@ export class Message extends Model{
                         </div>
                     </div>
                 </div>
+
             </div>
         `;
         if (this.content.photo) {
@@ -165,7 +175,7 @@ export class Message extends Model{
 
             case 'image':
                 div.innerHTML = `
-<div class="_3_7SH _3qMSo ">
+<div class="_3_7SH _3qMSo" id="_${this.id}">
     <div class="KYpDv">
         <div>
             <div class="_3v3PK" style="width: 330px; height: 330px;">
@@ -208,18 +218,19 @@ export class Message extends Model{
                 `;
             
 
-                div.querySelector('.message-photo').on('load', e=>{
+                div.querySelector('.message-photo').on('load', e => {
                     div.querySelector('.message-photo').show();
-                    div.querySelector('._34Olu').hide();
+                    this.load = div.querySelector('._2BzIU').hide();
                     div.querySelector('._3v3PK').css({
                         height: 'auto'
                     });
+
                 });
             break;
 
             case 'document':
                 div.innerHTML = `
-    <div class="_3_7SH _1ZPgd">
+    <div class="_3_7SH _1ZPgd" id="_${this.id}">
         <div class="_1fnMt _2CORf">
             <a class="_1vKRe" href="#">
                 <div class="_2jTyA" style="background-image: url(${this.preview})"></div>
@@ -266,7 +277,7 @@ export class Message extends Model{
 
             case 'audio':
                 div.innerHTML = `
-<div class="_3_7SH _17oKL">
+<div class="_3_7SH _17oKL" id="_${this.id}">
 <div class="_2N_Df LKbsn">
     <div class="_2jfIu">
         <div class="_2cfqh">
@@ -407,7 +418,7 @@ export class Message extends Model{
 
             default:
                 div.innerHTML = `
-                <div class="font-style _3DFk6 tail" id="_${this.id}">
+                <div class="font-style _3DFk6 tail">
                 <span class="tail-container"></span>
                 <span class="tail-container highlight"></span>
                 <div class="Tkt2p">
@@ -422,6 +433,7 @@ export class Message extends Model{
                 </div>
             </div>
                 `;
+                break;
 
         }
 
@@ -432,7 +444,7 @@ export class Message extends Model{
             className = 'message-out';
 
             div.querySelector('.message-time').parentElement.appendChild(this.getStatusViewElement());
-            
+            this.getStatusViewElement();
         }
         
         div.firstElementChild.classList.add(className);
@@ -455,10 +467,10 @@ export class Message extends Model{
 
         return Message.send(chatId, from, 'audio', '').then(msgRef=>{
             Message.upload(file, from).then(snapshot=>{
-                let downloadFile = snapshot.downloadURL;
+                let downloadFile = snapshot;
 
                 msgRef.set({
-                    content: downloadFile,
+                    content: snapshot,
                     size: file.size,
                     fileType: file.type,
                     status: 'sent',
@@ -480,19 +492,19 @@ export class Message extends Model{
         
             Message.upload(file, from).then(snapshot=>{
                 
-                let downloadFile = snapshot.downloadURL;
+                
 
                 if(filePreview){
 
                 Message.upload(filePreview, from).then(snapshot2 =>{
-                    let downloadPreview = snapshot2.downloadURL;
+                    
                 
                     msgRef.set({
-                        content: downloadFile,
-                        preview: downloadPreview,
+                        content: snapshot,
+                        preview: snapshot2,
                         filename: file.name,
                         size: file.size,
-                        fileType: file.type,
+                        filetype: file.type,
                         status: 'sent',
                         info
                     }, {
@@ -501,11 +513,11 @@ export class Message extends Model{
                 });
             }else{
                 msgRef.set({
-                    content: downloadFile,
+                    content: snapshot,
                     filename: file.name,
                     size: file.size,
-                    fileType: file.type,
-                    status: 'sent',
+                    filetype: file.type,
+                    status: 'sent'
 
                 }, {
                     merge: true
@@ -519,12 +531,12 @@ export class Message extends Model{
 
         return new Promise((s, f)=>{
 
-        Message.upload(file, from).then(snapshot=>{
+        Message.upload(file, from).then(url=>{
             Message.send(
                 chatId, 
                 from, 
                 'image', 
-                snapshot.downloadURL
+                url
                 ).then(()=>{
                 s();
             });
