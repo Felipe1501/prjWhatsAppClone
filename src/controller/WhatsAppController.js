@@ -6,21 +6,57 @@ import { Firebase } from '../util/Firebase';
 import { User } from '../model/User';
 import { Chat } from '../model/Chat';
 import { Message } from '../model/Message';
-import { Message } from '../model/Message';
 import { Base64 } from "../util/Base64";
 import { ContactsController } from './ContactsController';
 import { Upload } from '../util/Upload';
 
 export class WhatsAppController{
     constructor(){
-        console.log('WhatsAppController OK');
         
+        this._active = true;
         this._firebase = new Firebase();
         this.initAuth();
         this.elementsPrototype();
         this.loadElements();
         this.initEvents();
+        this.checkNotifications();
 
+    }
+
+    checkNotifications(){
+        if(typeof Notification === 'function'){
+            if(Notification.permission !== 'granted'){
+                this.el.alertNotificationPemission.show();
+            }else{
+                this.el.alertNotificationPemission.hide();
+            }
+            this.el.alertNotificationPemission.on('click', e=>{
+                Notification.requestPermission(permission=>{
+                    if (permission === 'granted'){
+                        this.el.alertNotificationPemission.hide();
+                        console.info('notificações permitidas!');
+                    }
+                });
+            });
+        }
+    }
+
+    notification(data){
+        if(Notification.permission === 'granted' && !this._active){
+            let n = new Notification(this._contactActive.name, {
+                icon: this._contactActive.photo,
+                body: data.content
+            });
+
+            let sound = new Audio('./audio/alert.mp3');
+            sound.currentTime = 0;
+            sound.play();
+
+            setTimeout(()=>{
+                if (n) n.close();
+
+            }, 3000);
+        }
     }
 
     initAuth(){
@@ -172,6 +208,8 @@ export class WhatsAppController{
 
         this.el.panelMessagesContainer.innerHTML = '';
 
+        this._messagesReceived = [];
+
         Message.getRef(this._contactActive.chatId).orderBy('timeStamp')
             .onSnapshot(docs =>{
 
@@ -181,15 +219,22 @@ export class WhatsAppController{
                 this.el.panelMessagesContainer.offsetHeight);
                 let autoScroll = (scrollTop >= scrollTopMax);
 
+                
+
                 docs.forEach(doc => {
                     let data = doc.data();
                     data.id = doc.id;
                     
                     let message = new Message();
 
+                    let me = (data.from === this._user.email);
+
                     message.fromJSON(data);
 
-                    let me = (data.from === this._user.email);
+                    if(!me && this._messagesReceived.filter(id => {return (id === data.id)}).length === 0){
+                        this.notification(data);
+                        this._messagesReceived.push(data.id);
+                    }
 
                     let view = message.getViewElement(me);
 
@@ -346,6 +391,14 @@ export class WhatsAppController{
     }
 
     initEvents(){
+
+        window.addEventListener('focus', e=>{
+            this._active = true;
+        });
+
+        window.addEventListener('blur', e=>{
+            this._active = false;
+        });
 
         this.el.inputSearchContacts.on('keyup', e=>{
             if(this.el.inputSearchContacts.value.length > 0){
