@@ -9,6 +9,7 @@ import { Message } from '../model/Message';
 import { Message } from '../model/Message';
 import { Base64 } from "../util/Base64";
 import { ContactsController } from './ContactsController';
+import { Metadata } from 'pdfjs-dist';
 
 export class WhatsAppController{
     constructor(){
@@ -700,6 +701,16 @@ export class WhatsAppController{
         });
 
         this.el.btnFinishMicrophone.on('click', e=>{
+
+            this._microphoneController.on('recorded', (file, metadata)=>{
+                Message.sendAudio(
+                    this._contactActive.chatId,
+                    this._user.email,
+                    file,
+                    metadata,
+                    this._user.photo
+                );
+            });
             this._microphoneController.stopRecorder();
             this.closeRecordMicrophone();
         });
