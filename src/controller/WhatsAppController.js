@@ -26,11 +26,11 @@ export class WhatsAppController{
     checkNotifications(){
         if(typeof Notification === 'function' && !this._active){
             if(Notification.permission !== 'granted'){
-                this.el.alertNotificationPemission.show();
+                this.el.alertNotificationPermission.show();
             }else{
-                this.el.alertNotificationPemission.hide();
+                this.el.alertNotificationPermission.hide();
             }
-            this.el.alertNotificationPemission.on('click', e=>{
+            this.el.alertNotificationPermission.on('click', e=>{
                 Notification.requestPermission(permission=>{
                     if (permission === 'granted'){
                         this.el.alertNotificationPemission.hide();
@@ -53,7 +53,9 @@ export class WhatsAppController{
             sound.play();
 
             setTimeout(()=>{
-                if (n) n.close();
+                if (n) {
+                    n.close();
+                }
 
             }, 3000);
         }
@@ -226,10 +228,11 @@ export class WhatsAppController{
                     data.id = doc.id;
                     
                     let message = new Message();
+                    message.fromJSON(data);
 
                     let me = (data.from === this._user.email);
 
-                    message.fromJSON(data);
+                    
 
                     if(!me && this._messagesReceived.filter(id => {return (id === data.id)}).length === 0){
                         this.notification(data);
@@ -238,7 +241,7 @@ export class WhatsAppController{
 
                     let view = message.getViewElement(me);
 
-                   if (!this.el.panelMessagesContainer.querySelector('#_' + data.id)){
+                    if (!this.el.panelMessagesContainer.querySelector(`#_${data.id}`)){
                     
 
                     if(!me){
@@ -299,7 +302,7 @@ export class WhatsAppController{
                     (this.el.panelMessagesContainer.scrollHeight -
                         this.el.panelMessagesContainer.offsetHeight);
                 }  else {
-                    this.el.panelMessagesContainer.scrollTop = scrollTop;
+                    this.el.scrollTop = scrollTop;
                 }  
 
                 });
@@ -446,7 +449,7 @@ export class WhatsAppController{
                 let file = this.el.inputProfilePhoto.files[0];
 
                 Upload.send(file, this._user.email).then(snapshot=>{
-                    this._user.photo = snapshot.downloadURL;
+                    this._user.photo = snapshot;
                     this._user.save().then(()=>{
                         this.el.btnClosePanelEditProfile.click();
                     });
@@ -577,7 +580,7 @@ export class WhatsAppController{
 
             this.el.btnSendPicture.disabled = true;
         
-            let regex = new /^data:(.+);base64,(.*)$/;
+            let regex = /^data:(.+);base64,(.*)$/;
 
             let result = this.el.pictureCamera.src.match(regex);
 
@@ -614,7 +617,6 @@ export class WhatsAppController{
                 this.el.videoCamera.show();
                 this.el.containerSendPicture.hide();
                 this.el.containerTakePicture.show();
-                this.el.panelMessagesContainer.show();
                 this.el.panelMessagesContainer.show();
             });
             //console.log(result);
